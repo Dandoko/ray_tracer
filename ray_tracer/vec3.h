@@ -45,5 +45,6 @@ Vec3 unit_vector(const Vec3& v);
 
 // Class aliases
 using Point3 = Vec3;	// 3D point
+using Color = Vec3;		// RGB color
 
 #endif 
