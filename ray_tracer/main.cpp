@@ -4,11 +4,31 @@
 #include "ray.h"
 #include "vec3.h"
 
+double hit_sphere(const Point3& centre, double radius, const Ray& r) {
+    Vec3 sphere_centre_to_ray_origin = r.origin() - centre;
+    double a = dot(r.direction(), r.direction());
+    double b = 2.0 * dot(sphere_centre_to_ray_origin, r.direction());
+    double c = dot(sphere_centre_to_ray_origin, sphere_centre_to_ray_origin) - radius * radius;
+    double discriminant = b * b - 4 * a * c;
+
+    if (discriminant < 0) {
+        return -1.0;
+    }
+    else {
+        return (-b - sqrt(discriminant)) / (2.0 * a);
+    }
+}
+
 Color ray_color(const Ray& r) {
+    double t = hit_sphere(Point3(0, 0, -1), 0.5, r);
+    if (t > 0.0) {
+        return Color(1, 0, 0);
+    }
+
     // Colors the background (linearly blended gradient)
     Vec3 unit_direction = unit_vector(r.direction());                   // Scaling to unit length
-    double t = 0.5 * (unit_direction.y() + 1.0);                        // 0.0 <= t <= 1.0
-    return (1.0 - t) * Color(1.0, 1.0, 1.0) + t * Color(0.5, 0.7, 1.0); // lerp value = (1 - t) * startVal + t * endVal
+    double a = 0.5 * (unit_direction.y() + 1.0);                        // 0.0 <= t <= 1.0
+    return (1.0 - a) * Color(1.0, 1.0, 1.0) + a * Color(0.5, 0.7, 1.0); // lerp value = (1 - t) * startVal + t * endVal
 }
 
 int main() {
