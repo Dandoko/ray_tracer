@@ -22,7 +22,8 @@ double hit_sphere(const Point3& centre, double radius, const Ray& r) {
 Color ray_color(const Ray& r) {
     double t = hit_sphere(Point3(0, 0, -1), 0.5, r);
     if (t > 0.0) {
-        return Color(1, 0, 0);
+        Vec3 n = unit_vector(r.at(t) - Vec3(0, 0, -1));
+        return 0.5 * Color(n.x() + 1, n.y() + 1, n.z() + 1);
     }
 
     // Colors the background (linearly blended gradient)
