@@ -6,16 +6,16 @@
 
 double hit_sphere(const Point3& centre, double radius, const Ray& r) {
     Vec3 sphere_centre_to_ray_origin = r.origin() - centre;
-    double a = dot(r.direction(), r.direction());
-    double b = 2.0 * dot(sphere_centre_to_ray_origin, r.direction());
-    double c = dot(sphere_centre_to_ray_origin, sphere_centre_to_ray_origin) - radius * radius;
-    double discriminant = b * b - 4 * a * c;
+    double a = r.direction().length_squared();
+    double half_b = dot(sphere_centre_to_ray_origin, r.direction());
+    double c = sphere_centre_to_ray_origin.length_squared() - radius * radius;
+    double discriminant = half_b * half_b - a * c;
 
     if (discriminant < 0) {
         return -1.0;
     }
     else {
-        return (-b - sqrt(discriminant)) / (2.0 * a);
+        return (-half_b - sqrt(discriminant)) / a;
     }
 }
 
