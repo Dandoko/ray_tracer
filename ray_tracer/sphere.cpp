@@ -16,7 +16,7 @@ bool Sphere::hit(const Ray& r, double t_min, double t_max, HitRecord& rec) const
 		return false;
 	}
 
-	// Finding the nearest root that lies in the acceptable range
+	// Finding the closest root to the camera that lies in the acceptable range
 	double sqrt_discriminant = sqrt(discriminant);
 	double root = (-half_b - sqrt_discriminant) / a;
 	if (root < t_min || root >= t_max) {
@@ -29,7 +29,7 @@ bool Sphere::hit(const Ray& r, double t_min, double t_max, HitRecord& rec) const
 	rec.t = root;
 	rec.p = r.at(rec.t);
 	rec.normal = (rec.p - centre) / radius;	// Does the same thing as unit_vector(rec.p - centre) but
-											// we need to divide by the radius instead for inverted spheres
+											// we need to divide by the radius for inverted spheres
 	
 	return true;
 }
