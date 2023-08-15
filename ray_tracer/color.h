@@ -3,6 +3,6 @@
 
 #include "vec3.h"
 
-void write_color(std::ostream& out, Color pixel_color);
+void write_color(std::ostream& out, const Color& pixel_color);
 
 #endif
