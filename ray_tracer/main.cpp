@@ -1,29 +1,17 @@
 #include <iostream>
 
 #include "color.h"
+#include "hittable.h"
+#include "hittable_list.h"
 #include "ray.h"
+#include "sphere.h"
+#include "utility.h"
 #include "vec3.h"
 
-double hit_sphere(const Point3& centre, double radius, const Ray& r) {
-    Vec3 sphere_centre_to_ray_origin = r.origin() - centre;
-    double a = r.direction().length_squared();
-    double half_b = dot(sphere_centre_to_ray_origin, r.direction());
-    double c = sphere_centre_to_ray_origin.length_squared() - radius * radius;
-    double discriminant = half_b * half_b - a * c;
-
-    if (discriminant < 0) {
-        return -1.0;
-    }
-    else {
-        return (-half_b - sqrt(discriminant)) / a;
-    }
-}
-
-Color ray_color(const Ray& r) {
-    double t = hit_sphere(Point3(0, 0, -1), 0.5, r);
-    if (t > 0.0) {
-        Vec3 n = unit_vector(r.at(t) - Vec3(0, 0, -1));
-        return 0.5 * Color(n.x() + 1, n.y() + 1, n.z() + 1);
+Color ray_color(const Ray& r, const Hittable& world) {
+    HitRecord rec;
+    if (world.hit(r, 0, INF, rec)) {
+        return 0.5 * (rec.normal + Color(1, 1, 1));
     }
 
     // Colors the background (linearly blended gradient)
@@ -37,6 +25,11 @@ int main() {
     double aspect_ratio = 16.0 / 9.0;
     int image_width = 400;
     int image_height = image_width / aspect_ratio;
+
+    // World
+    HittableList world{};
+    world.add(make_shared<Sphere>(Point3(0, 0, -1), 0.5));
+    world.add(make_shared<Sphere>(Point3(0, -100.5, -1), 100));
 
     // Camera
     double focal_length = 1.0;
@@ -54,10 +47,7 @@ int main() {
     Vec3 pixel_delta_v = viewport_v / image_height;
 
     // The location of the upper left corner of the viewport and the zeroth pixel
-    //=========================================================================
-    // z-axis goes INTO the viewport?????
-    // Global axes: y-axis goes up, x-axis goes right, z-axis goes into the viewport
-    //=========================================================================
+    // Global axes: y-axis goes up, x-axis goes right, z-axis goes out of the viewport
     Point3 viewport_upper_left = camera_centre - Vec3(0, 0, focal_length) - viewport_u / 2 - viewport_v / 2;
     Point3 pixel_upper_left = viewport_upper_left + 0.5 * (pixel_delta_u + pixel_delta_v);
 
@@ -72,7 +62,7 @@ int main() {
             Vec3 ray_direction = pixel_centre - camera_centre;
             Ray r(camera_centre, ray_direction);
 
-            Color pixel_color = ray_color(r);
+            Color pixel_color = ray_color(r, world);
             write_color(std::cout, pixel_color);
         }
     }
