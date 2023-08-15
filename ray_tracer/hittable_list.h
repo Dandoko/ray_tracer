@@ -17,7 +17,7 @@ public:
 	void clear();
 	void add(std::shared_ptr<Hittable> object);
 
-	virtual bool hit(const Ray& r, double t_min, double t_max, HitRecord& rec) const override;
+	virtual bool hit(const Ray& r, Interval t_interval, HitRecord& rec) const override;
 };
 
 #endif

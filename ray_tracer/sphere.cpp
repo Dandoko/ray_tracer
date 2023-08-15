@@ -2,7 +2,7 @@
 
 Sphere::Sphere(Point3 centre, double r) : centre(centre), radius(r) {}
 
-bool Sphere::hit(const Ray& r, double t_min, double t_max, HitRecord& rec) const {
+bool Sphere::hit(const Ray& r, Interval t_interval, HitRecord& rec) const {
 	// Using a simplified quadratic equation
 	Vec3 sphere_centre_to_ray_origin = r.origin() - centre;
     double a = r.direction().length_squared();
@@ -19,9 +19,9 @@ bool Sphere::hit(const Ray& r, double t_min, double t_max, HitRecord& rec) const
 	// Finding the closest root to the camera that lies in the acceptable range
 	double sqrt_discriminant = sqrt(discriminant);
 	double root = (-half_b - sqrt_discriminant) / a;
-	if (root < t_min || root >= t_max) {
+	if (!t_interval.surrounds(root)) {
 		root = (-half_b + sqrt_discriminant) / a;
-		if (root < t_min || root >= t_max) {
+		if (!t_interval.surrounds(root)) {
 			return false;
 		}
 	}

@@ -1,6 +1,7 @@
 #ifndef HITTABLE_H
 #define HITTABLE_H
 
+#include "interval.h"
 #include "ray.h"
 
 class Material;
@@ -18,7 +19,7 @@ struct HitRecord {
 class Hittable {
 public:
 	// Hits only count if t_min < t < t_max 
-	virtual bool hit(const Ray& r, double t_min, double t_max, HitRecord& rec) const = 0;
+	virtual bool hit(const Ray& r, Interval t_interval, HitRecord& rec) const = 0;
 };
 
 #endif
