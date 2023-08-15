@@ -28,8 +28,9 @@ bool Sphere::hit(const Ray& r, double t_min, double t_max, HitRecord& rec) const
 
 	rec.t = root;
 	rec.p = r.at(rec.t);
-	rec.normal = (rec.p - centre) / radius;	// Does the same thing as unit_vector(rec.p - centre) but
-											// we need to divide by the radius for inverted spheres
+	Vec3 outward_normal = (rec.p - centre) / radius;	// Does the same thing as unit_vector(rec.p - centre) but
+														// we need to divide by the radius for inverted spheres
+	rec.set_face_normal(r, outward_normal);
 	
 	return true;
 }
