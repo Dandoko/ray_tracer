@@ -14,7 +14,7 @@ class HittableList : public Hittable {
 private:
 	vector<shared_ptr<Hittable>> objects;
 public:
-	HittableList(shared_ptr<Hittable> object);
+	HittableList();
 
 	void clear();
 	void add(shared_ptr<Hittable> object);

@@ -1,8 +1,6 @@
 #include "hittable_list.h"
 
-HittableList::HittableList(shared_ptr<Hittable> object) {
-	add(object);
-}
+HittableList::HittableList() {}
 
 void HittableList::clear() {
 	objects.clear();
@@ -13,7 +11,7 @@ void HittableList::add(shared_ptr<Hittable> object) {
 }
 
 bool HittableList::hit(const Ray& r, double t_min, double t_max, HitRecord& rec) const {
-	HitRecord temp_record;
+	HitRecord temp_record{};
 	bool hit_something = false;
 	double closest_so_far = t_max;
 
