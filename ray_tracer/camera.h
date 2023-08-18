@@ -19,7 +19,11 @@ private:
 	Vec3 pixel_delta_u;			// Offset to pixel to the right in the viewport
 	Vec3 pixel_delta_v;			// Offset to pixel below in the viewport
 
+	int samples_per_pixel;		// Number of random samples for each pixel for anti-aliasing
+
 	Color ray_color(const Ray& r, const Hittable& world) const;
+	Ray get_ray(int i, int j) const;
+	Vec3 pixel_sample_square() const;
 };
 
 #endif

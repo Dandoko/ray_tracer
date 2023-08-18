@@ -13,6 +13,8 @@ public:
 
 	bool contains(double x);
 	bool surrounds(double x);
+
+	double clamp(double x) const;
 };
 
 #endif

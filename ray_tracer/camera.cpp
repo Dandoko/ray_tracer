@@ -26,6 +26,8 @@ Camera::Camera() {
     // Global axes: y-axis goes up, x-axis goes right, z-axis goes out of the viewport
     Point3 viewport_upper_left = centre - Vec3(0, 0, focal_length) - viewport_u / 2 - viewport_v / 2;
     pixel_upper_left = viewport_upper_left + 0.5 * (pixel_delta_u + pixel_delta_v);
+
+    samples_per_pixel = 100;
 }
 
 void Camera::render(const Hittable& world) {
@@ -35,12 +37,14 @@ void Camera::render(const Hittable& world) {
     for (int j = 0; j < image_height; j++) {
         std::clog << "\rScanlines remaining: " << (image_height - j) << ' ' << std::flush;
         for (int i = 0; i < image_width; i++) {
-            Point3 pixel_centre = pixel_upper_left + (i * pixel_delta_u) + (j * pixel_delta_v);
-            Vec3 ray_direction = pixel_centre - centre;
-            Ray r(centre, ray_direction);
-
-            Color pixel_color = ray_color(r, world);
-            write_color(std::cout, pixel_color);
+            
+            // Anti-aliasing
+            Color pixel_color(0, 0, 0);
+            for (int s = 0; s < samples_per_pixel; s++) {
+                Ray r = get_ray(i, j);
+                pixel_color += ray_color(r, world);
+            }
+            write_color(std::cout, pixel_color, samples_per_pixel);
         }
     }
 }
@@ -55,4 +59,20 @@ Color Camera::ray_color(const Ray& r, const Hittable& world) const {
     Vec3 unit_direction = unit_vector(r.direction());                   // Scaling to unit length
     double a = 0.5 * (unit_direction.y() + 1.0);                        // 0.0 <= t <= 1.0
     return (1.0 - a) * Color(1.0, 1.0, 1.0) + a * Color(0.5, 0.7, 1.0); // lerp value = (1 - t) * startVal + t * endVal
+}
+
+Ray Camera::get_ray(int i, int j) const {
+    Point3 pixel_centre = pixel_upper_left + (i * pixel_delta_u) + (j * pixel_delta_v);
+    Point3 pixel_sample = pixel_centre + pixel_sample_square();
+
+    Point3 ray_origin = centre;
+    Vec3 ray_direction = pixel_sample - ray_origin;
+
+    return Ray(ray_origin, ray_direction);
+}
+
+Vec3 Camera::pixel_sample_square() const {
+    double px = -0.5 + random_double();
+    double py = -0.5 + random_double();
+    return (px * pixel_delta_u) + (py * pixel_delta_v);
 }

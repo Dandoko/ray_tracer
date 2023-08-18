@@ -11,3 +11,15 @@ bool Interval::contains(double x) {
 bool Interval::surrounds(double x) {
 	return min < x && x < max;
 }
+
+double Interval::clamp(double x) const {
+	if (x < min) {
+		return min;
+	}
+	else if (x > max) {
+		return max;
+	}
+	else {
+		return x;
+	}
+}
