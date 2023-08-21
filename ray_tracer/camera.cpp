@@ -52,6 +52,10 @@ void Camera::render(const Hittable& world) {
 }
 
 Color Camera::ray_color(const Ray& r, const Hittable& world, int depth) const {
+    if (0 >= depth) {
+        return Color(0, 0, 0);
+    }
+
     HitRecord rec;
     if (world.hit(r, Interval{ 0, INF }, rec)) {
         Vec3 direction = random_on_hemisphere(rec.normal);
