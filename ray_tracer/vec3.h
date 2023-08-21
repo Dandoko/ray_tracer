@@ -48,7 +48,7 @@ Vec3 unit_vector(const Vec3& v);
 
 Vec3 random_in_unit_sphere();					// Gets a random vector in a unit sphere
 Vec3 random_unit_vector();						// Gets a random vector on a unit sphere
-Vec3 random_on_hemisphere(const Vec3& normal);	// 
+Vec3 random_on_hemisphere(const Vec3& normal);	// Gets a random normalized vector on the same side as the normal
 
 // Class aliases
 using Point3 = Vec3;	// 3D point
