@@ -29,6 +29,7 @@ Camera::Camera() {
     pixel_upper_left = viewport_upper_left + 0.5 * (pixel_delta_u + pixel_delta_v);
 
     samples_per_pixel = 100;
+    max_depth = 50;
 }
 
 void Camera::render(const Hittable& world) {
@@ -43,18 +44,18 @@ void Camera::render(const Hittable& world) {
             Color pixel_color(0, 0, 0);
             for (int s = 0; s < samples_per_pixel; s++) {
                 Ray r = get_ray(i, j);
-                pixel_color += ray_color(r, world);
+                pixel_color += ray_color(r, world, max_depth);
             }
             write_color(std::cout, pixel_color, samples_per_pixel);
         }
     }
 }
 
-Color Camera::ray_color(const Ray& r, const Hittable& world) const {
+Color Camera::ray_color(const Ray& r, const Hittable& world, int depth) const {
     HitRecord rec;
     if (world.hit(r, Interval{ 0, INF }, rec)) {
         Vec3 direction = random_on_hemisphere(rec.normal);
-        return 0.5 * ray_color(Ray(rec.p, direction), world);
+        return 0.5 * ray_color(Ray(rec.p, direction), world, depth - 1);
     }
 
     // Colors the background (linearly blended gradient)

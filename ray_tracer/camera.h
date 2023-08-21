@@ -20,8 +20,9 @@ private:
 	Vec3 pixel_delta_v;			// Offset to pixel below in the viewport
 
 	int samples_per_pixel;		// Number of random samples for each pixel for anti-aliasing
+	int max_depth;				// Maximum number of ray bounces
 
-	Color ray_color(const Ray& r, const Hittable& world) const;
+	Color ray_color(const Ray& r, const Hittable& world, int depth) const;
 	Ray get_ray(int i, int j) const;
 	Vec3 pixel_sample_square() const;
 };
