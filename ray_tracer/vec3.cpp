@@ -1,4 +1,5 @@
 #include "vec3.h"
+#include "utility.h"
 
 //=============================================================================
 // Member functions
@@ -58,6 +59,14 @@ double Vec3::length_squared() const {
 	return components[0] * components[0] + components[1] * components[1] + components[2] * components[2];
 }
 
+Vec3 Vec3::random() {
+	return Vec3(random_double(), random_double(), random_double());
+}
+
+Vec3 Vec3::random(double min, double max) {
+	return Vec3(random_double(min, max), random_double(min, max), random_double(min, max));
+}
+
 //=============================================================================
 // Utility functions
 //=============================================================================
@@ -102,4 +111,27 @@ Vec3 cross(const Vec3& u, const Vec3& v) {
 
 Vec3 unit_vector(const Vec3& v) {
 	return v / v.length();
+}
+
+Vec3 random_in_unit_sphere() {
+	while (true) {
+		Vec3 randomPoint = Vec3::random(-1, 1);
+		if (randomPoint.length_squared() < 1) {
+			return randomPoint;
+		}
+	}
+}
+
+Vec3 random_unit_vector() {
+	return unit_vector(random_in_unit_sphere());
+}
+
+Vec3 random_on_hemisphere(const Vec3& normal) {
+	Vec3 on_unit_sphere = random_in_unit_sphere();
+	if (dot(on_unit_sphere, normal) > 0.0) {
+		return on_unit_sphere;
+	}
+	else {
+		return -on_unit_sphere;
+	}
 }

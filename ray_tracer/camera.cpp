@@ -1,4 +1,5 @@
 #include "camera.h"
+#include "vec3.h"
 
 Camera::Camera() {
     // Image
@@ -52,7 +53,8 @@ void Camera::render(const Hittable& world) {
 Color Camera::ray_color(const Ray& r, const Hittable& world) const {
     HitRecord rec;
     if (world.hit(r, Interval{ 0, INF }, rec)) {
-        return 0.5 * (rec.normal + Color(1, 1, 1));
+        Vec3 direction = random_on_hemisphere(rec.normal);
+        return 0.5 * ray_color(Ray(rec.p, direction), world);
     }
 
     // Colors the background (linearly blended gradient)

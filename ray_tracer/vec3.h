@@ -25,6 +25,9 @@ public:
 	double length() const;
 	double length_squared() const;
 
+	static Vec3 random();
+	static Vec3 random(double min, double max);
+
 private:
 	double components[3]; // x, y, z
 };
@@ -42,6 +45,10 @@ double dot(const Vec3& u, const Vec3& v);
 Vec3 cross(const Vec3& u, const Vec3& v);
 
 Vec3 unit_vector(const Vec3& v);
+
+Vec3 random_in_unit_sphere();					// Gets a random vector in a unit sphere
+Vec3 random_unit_vector();						// Gets a random vector on a unit sphere
+Vec3 random_on_hemisphere(const Vec3& normal);	// 
 
 // Class aliases
 using Point3 = Vec3;	// 3D point
