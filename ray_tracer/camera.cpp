@@ -66,6 +66,7 @@ Color Camera::ray_color(const Ray& r, const Hittable& world, int depth) const {
             return attenuation * ray_color(scattered, world, depth - 1);
         }
 
+        // Absorb rays that scatter below the surface from fuzzing
         return Color(0, 0, 0);
     }
 
