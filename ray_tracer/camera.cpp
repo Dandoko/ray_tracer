@@ -1,4 +1,5 @@
 #include "camera.h"
+#include "material.h"
 #include "vec3.h"
 
 Camera::Camera() {
@@ -58,8 +59,14 @@ Color Camera::ray_color(const Ray& r, const Hittable& world, int depth) const {
 
     HitRecord rec;
     if (world.hit(r, Interval{ 0.001, INF }, rec)) {
-        Vec3 direction = rec.normal + random_unit_vector();
-        return 0.5 * ray_color(Ray(rec.p, direction), world, depth - 1);
+        Ray scattered;
+        Color attenuation;
+        
+        if (rec.mat->scatter(r, rec, attenuation, scattered)) {
+            return attenuation * ray_color(scattered, world, depth - 1);
+        }
+
+        return Color(0, 0, 0);
     }
 
     // Colors the background (linearly blended gradient)

@@ -67,6 +67,11 @@ Vec3 Vec3::random(double min, double max) {
 	return Vec3(random_double(min, max), random_double(min, max), random_double(min, max));
 }
 
+bool Vec3::near_zero() const {
+	double threshold = 1e-8;
+	return (fabs(components[0]) < threshold) && (fabs(components[1]) < threshold) && (fabs(components[2]) < threshold);
+}
+
 //=============================================================================
 // Utility functions
 //=============================================================================
@@ -134,4 +139,8 @@ Vec3 random_on_hemisphere(const Vec3& normal) {
 	else {
 		return -on_unit_sphere;
 	}
+}
+
+Vec3 reflect(const Vec3& v, const Vec3& n) {
+	return v - 2 * dot(v, n) * n;
 }

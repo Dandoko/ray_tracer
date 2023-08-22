@@ -1,6 +1,6 @@
 #include "sphere.h"
 
-Sphere::Sphere(Point3 centre, double r) : centre(centre), radius(r) {}
+Sphere::Sphere(Point3 centre, double r, std::shared_ptr<Material> material) : centre(centre), radius(r), mat(material) {}
 
 bool Sphere::hit(const Ray& r, Interval t_interval, HitRecord& rec) const {
 	// Using a simplified quadratic equation
@@ -31,6 +31,7 @@ bool Sphere::hit(const Ray& r, Interval t_interval, HitRecord& rec) const {
 	Vec3 outward_normal = (rec.p - centre) / radius;	// Does the same thing as unit_vector(rec.p - centre) but
 														// we need to divide by the radius for inverted spheres
 	rec.set_face_normal(r, outward_normal);
+	rec.mat = mat;
 	
 	return true;
 }

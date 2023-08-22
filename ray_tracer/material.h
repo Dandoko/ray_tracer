@@ -2,9 +2,8 @@
 #define MATERIAL_H
 
 #include "color.h"
+#include "hittable.h"
 #include "ray.h"
-
-class HitRecord;
 
 class Material {
 public:
