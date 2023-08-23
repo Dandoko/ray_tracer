@@ -144,3 +144,12 @@ Vec3 random_on_hemisphere(const Vec3& normal) {
 Vec3 reflect(const Vec3& v, const Vec3& n) {
 	return v - 2 * dot(v, n) * n;
 }
+
+// Solving for the refracted ray using the perpendicular and parallel components of the refracted ray
+// Precondition: v and n must be unit vectors
+Vec3 refract(const Vec3& v, const Vec3& n, double refraction_ratio) {
+	double cos_theta = fmin(dot(-v, n), 1.0);
+	Vec3 refracted_ray_perp = refraction_ratio * (v + cos_theta * n);
+	Vec3 refracted_ray_parallel = -sqrt(fabs(1.0 - refracted_ray_perp.length_squared())) * n;
+	return refracted_ray_perp + refracted_ray_parallel;
+}

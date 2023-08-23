@@ -53,6 +53,7 @@ Vec3 random_unit_vector();						// Gets a random vector on a unit sphere
 Vec3 random_on_hemisphere(const Vec3& normal);	// Gets a random normalized vector on the same side as the normal
 
 Vec3 reflect(const Vec3& v, const Vec3& n);
+Vec3 refract(const Vec3& v, const Vec3& n, double refraction_ratio); // Snell's Law
 
 // Class aliases
 using Point3 = Vec3;	// 3D point
