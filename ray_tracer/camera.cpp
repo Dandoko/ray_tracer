@@ -9,7 +9,7 @@ Camera::Camera() {
     image_height = image_width / aspect_ratio;
 
     // Camera orientation
-    v_fov = 90;
+    v_fov = 20;
     look_from = Point3(-2, 2, 1);
     look_at = Point3(0, 0, -1);
     view_up = Vec3(0, 1, 0);
@@ -18,7 +18,8 @@ Camera::Camera() {
     centre = look_from;
 
     // Viewport dimensions
-    double focal_length = (look_from - look_at).length();
+    focus_dist = 3.4;
+    double focal_length = focus_dist;                               // Image grid is on the focus plane
     double theta = degrees_to_radians(v_fov);
     double v_fov_height = tan(theta / 2);
     double viewport_height = 2.0 * (v_fov_height * focal_length);   // Arbitrary viewport height scale of 2
@@ -46,6 +47,12 @@ Camera::Camera() {
     // Ray tracing specifications
     samples_per_pixel = 100;
     max_depth = 50;
+
+    // Defocus blur
+    defocus_angle = 10.0;
+    double defocus_radius = focus_dist * tan(degrees_to_radians(defocus_angle / 2));
+    defocus_disk_u = u * defocus_radius;
+    defocus_disk_v = v * defocus_radius;
 }
 
 void Camera::render(const Hittable& world) {
@@ -95,7 +102,8 @@ Ray Camera::get_ray(int i, int j) const {
     Point3 pixel_centre = pixel_upper_left + (i * pixel_delta_u) + (j * pixel_delta_v);
     Point3 pixel_sample = pixel_centre + pixel_sample_square();
 
-    Point3 ray_origin = centre;
+    // Gets a random camera ray that is on the camera defocus disk
+    Point3 ray_origin = (defocus_angle <= 0) ? centre : defocus_disk_sample();
     Vec3 ray_direction = pixel_sample - ray_origin;
 
     return Ray(ray_origin, ray_direction);
@@ -105,4 +113,9 @@ Vec3 Camera::pixel_sample_square() const {
     double px = -0.5 + random_double();
     double py = -0.5 + random_double();
     return (px * pixel_delta_u) + (py * pixel_delta_v);
+}
+
+Point3 Camera::defocus_disk_sample() const {
+    Point3 p = random_in_unit_disk();
+    return centre + (p.x() * defocus_disk_u) + (p.y() * defocus_disk_v);
 }
