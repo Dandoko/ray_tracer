@@ -8,17 +8,31 @@ Camera::Camera() {
     image_width = 400;
     image_height = image_width / aspect_ratio;
 
-    centre = Point3(0, 0, 0);
+    // Camera orientation
+    v_fov = 90;
+    look_from = Point3(-2, 2, 1);
+    look_at = Point3(0, 0, -1);
+    view_up = Vec3(0, 1, 0);
+
+    // Camera world position
+    centre = look_from;
 
     // Viewport dimensions
-    double focal_length = 1.0;
-    double viewport_height = 2.0;                           // Arbitrary viewport height
-    double viewport_width = viewport_height *               // Don't use aspect ratio because it might not be the actual ratio between the
-        (static_cast<double>(image_width) / image_height);  // image width and height since the height and width are ints, not real numbers
+    double focal_length = (look_from - look_at).length();
+    double theta = degrees_to_radians(v_fov);
+    double v_fov_height = tan(theta / 2);
+    double viewport_height = 2.0 * (v_fov_height * focal_length);   // Arbitrary viewport height scale of 2
+    double viewport_width = viewport_height *                       // Don't use aspect ratio because it might not be the actual ratio between the
+        (static_cast<double>(image_width) / image_height);          // image width and height since the height and width are ints, not real numbers
+
+    // Orthonormal basis to describe the camera's orientation
+    w = unit_vector(look_from - look_at);
+    u = unit_vector(cross(view_up, w));
+    v = cross(w, u);
 
     // Horizontal and vertical vectors along the viewport edges
-    Vec3 viewport_u = Vec3(viewport_width, 0, 0);   // Left edge to right edge of viewport
-    Vec3 viewport_v = Vec3(0, -viewport_height, 0); // Top edge to bottom edge of viewport
+    Vec3 viewport_u = viewport_width * u;       // Left edge to right edge of viewport
+    Vec3 viewport_v = viewport_height * -v;     // Top edge to bottom edge of viewport
 
     // Horizontal and vertical delta vectors for the offset of a pixel in the viewport
     pixel_delta_u = viewport_u / image_width;
@@ -26,9 +40,10 @@ Camera::Camera() {
 
     // The location of the upper left corner of the viewport and the zeroth pixel
     // Global axes: y-axis goes up, x-axis goes right, z-axis goes out of the viewport
-    Point3 viewport_upper_left = centre - Vec3(0, 0, focal_length) - viewport_u / 2 - viewport_v / 2;
+    Point3 viewport_upper_left = centre - (focal_length * w) - viewport_u / 2 - viewport_v / 2;
     pixel_upper_left = viewport_upper_left + 0.5 * (pixel_delta_u + pixel_delta_v);
 
+    // Ray tracing specifications
     samples_per_pixel = 100;
     max_depth = 50;
 }
