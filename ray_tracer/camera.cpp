@@ -5,20 +5,20 @@
 Camera::Camera() {
     // Image
     aspect_ratio = 16.0 / 9.0;
-    image_width = 400;
+    image_width = 1000;
     image_height = image_width / aspect_ratio;
 
     // Camera orientation
     v_fov = 20;
-    look_from = Point3(-2, 2, 1);
-    look_at = Point3(0, 0, -1);
+    look_from = Point3(0, 0, 6);
+    look_at = Point3(0, 0, 0);
     view_up = Vec3(0, 1, 0);
 
     // Camera world position
     centre = look_from;
 
     // Viewport dimensions
-    focus_dist = 3.4;
+    focus_dist = 6;
     double focal_length = focus_dist;                               // Image grid is on the focus plane
     double theta = degrees_to_radians(v_fov);
     double v_fov_height = tan(theta / 2);
@@ -45,11 +45,11 @@ Camera::Camera() {
     pixel_upper_left = viewport_upper_left + 0.5 * (pixel_delta_u + pixel_delta_v);
 
     // Ray tracing specifications
-    samples_per_pixel = 100;
+    samples_per_pixel = 400;
     max_depth = 50;
 
     // Defocus blur
-    defocus_angle = 10.0;
+    defocus_angle = 0.05;
     double defocus_radius = focus_dist * tan(degrees_to_radians(defocus_angle / 2));
     defocus_disk_u = u * defocus_radius;
     defocus_disk_v = v * defocus_radius;
