@@ -22,12 +22,17 @@ int main() {
     auto material_center = std::make_shared<Lambertian>(Color(0.55, 0.78, 1.0));
     auto material_right = std::make_shared<Lambertian>(Color(1.0, 0.4, 0.4));
     auto material_front = std::make_shared<Dielectric>(1.5);
+    auto material_left_front = std::make_shared<Lambertian>(Color(1.0, 0.4, 0.4));
 
     world.add(std::make_shared<Sphere>(Point3(0.0, -100.5, -1.0), 100.0, material_ground));
     world.add(std::make_shared<Sphere>(Point3(-1.01, 0.0, -1.0), 0.5, material_left));
     world.add(std::make_shared<Sphere>(Point3(0.0, 0.0, -1.3), 0.5, material_center));
     world.add(std::make_shared<Sphere>(Point3(1.01, 0.0, -1.0), 0.5, material_right));
-    world.add(std::make_shared<Sphere>(Point3(0.0, -0.35, 1.0), 0.15, material_front));
+    
+    Point3 centre_front = Point3(0.0, -0.35, 1.0);
+    Point3 centre_left_front = Point3(-1.0, -0.35, 1.0);
+    world.add(std::make_shared<Sphere>(centre_front, centre_front + Vec3(0, 0.1, 0), 0.15, material_front));
+    world.add(std::make_shared<Sphere>(centre_left_front, centre_left_front + Vec3(0, 0.12, 0), 0.15, material_left_front));
 
     // Camera
     Camera camera{};

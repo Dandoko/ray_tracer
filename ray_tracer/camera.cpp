@@ -5,7 +5,7 @@
 Camera::Camera() {
     // Image
     aspect_ratio = 16.0 / 9.0;
-    image_width = 1000;
+    image_width = 400;
     image_height = image_width / aspect_ratio;
 
     // Camera orientation
@@ -45,7 +45,7 @@ Camera::Camera() {
     pixel_upper_left = viewport_upper_left + 0.5 * (pixel_delta_u + pixel_delta_v);
 
     // Ray tracing specifications
-    samples_per_pixel = 400;
+    samples_per_pixel = 50;
     max_depth = 50;
 
     // Defocus blur
@@ -106,7 +106,11 @@ Ray Camera::get_ray(int i, int j) const {
     Point3 ray_origin = (defocus_angle <= 0) ? centre : defocus_disk_sample();
     Vec3 ray_direction = pixel_sample - ray_origin;
 
-    return Ray(ray_origin, ray_direction);
+    // Ray time is between [0, 1)
+    // Start time is 0, end time is 1
+    double ray_time = random_double();
+
+    return Ray(ray_origin, ray_direction, ray_time);
 }
 
 Vec3 Camera::pixel_sample_square() const {

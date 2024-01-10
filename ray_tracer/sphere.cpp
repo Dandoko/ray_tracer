@@ -1,9 +1,16 @@
 #include "sphere.h"
 
-Sphere::Sphere(Point3 centre, double r, std::shared_ptr<Material> material) : centre(centre), radius(r), mat(material) {}
+Sphere::Sphere(Point3 in_centre_start, double r, std::shared_ptr<Material> material) : centre_start(in_centre_start), radius(r), mat(material), is_moving(false) {
+	// centre_disp_vec has garbage value for stationary spheres
+}
+
+Sphere::Sphere(Point3 in_centre_start, Point3 centre_end, double r, std::shared_ptr<Material> material) : centre_start(in_centre_start), radius(r), mat(material), is_moving(true) {
+	centre_disp_vec = centre_end - centre_start;
+}
 
 bool Sphere::hit(const Ray& r, Interval t_interval, HitRecord& rec) const {
 	// Using a simplified quadratic equation
+	Point3 centre = is_moving ? calculate_current_centre(r.time()) : centre_start;
 	Vec3 sphere_centre_to_ray_origin = r.origin() - centre;
     double a = r.direction().length_squared();
     double half_b = dot(sphere_centre_to_ray_origin, r.direction());
@@ -34,4 +41,9 @@ bool Sphere::hit(const Ray& r, Interval t_interval, HitRecord& rec) const {
 	rec.mat = mat;
 	
 	return true;
+}
+
+Point3 Sphere::calculate_current_centre(double time) const {
+	// Linear interpolates for time [0, 1]
+	return centre_start + time * centre_disp_vec;
 }
