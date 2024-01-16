@@ -2,12 +2,17 @@
 
 HittableList::HittableList() {}
 
+HittableList::HittableList(std::shared_ptr<Hittable> object) {
+	add(object);
+}
+
 void HittableList::clear() {
 	objects.clear();
 }
 
 void HittableList::add(std::shared_ptr<Hittable> object) {
 	objects.push_back(object);
+	b_box = AABB(b_box, object->bounding_box());
 }
 
 bool HittableList::hit(const Ray& r, Interval t_interval, HitRecord& rec) const {
@@ -25,4 +30,8 @@ bool HittableList::hit(const Ray& r, Interval t_interval, HitRecord& rec) const 
 	}
 
 	return hit_something;
+}
+
+AABB HittableList::bounding_box() const {
+	return b_box;
 }

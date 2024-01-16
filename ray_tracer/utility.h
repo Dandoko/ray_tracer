@@ -15,5 +15,6 @@ const double REFRACTION_INDEX_AIR = 1.0;
 double degrees_to_radians(double degrees);
 double random_double();							// Returns a random real number in [0, 1)
 double random_double(double min, double max);	// Returns a random real number in [min, max)
+int random_int(int min, int max);				// Returns a random integer in [min, max]
 
 #endif

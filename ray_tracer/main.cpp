@@ -1,5 +1,6 @@
 #include <iostream>
 
+#include "bvh.h"
 #include "camera.h"
 #include "color.h"
 #include "dielectric.h"
@@ -33,6 +34,8 @@ int main() {
     Point3 centre_left_front = Point3(-1.0, -0.35, 1.0);
     world.add(std::make_shared<Sphere>(centre_front, centre_front + Vec3(0, 0.1, 0), 0.15, material_front));
     world.add(std::make_shared<Sphere>(centre_left_front, centre_left_front + Vec3(0, 0.12, 0), 0.15, material_left_front));
+
+    world = HittableList(std::make_shared<BVHNode>(world));
 
     // Camera
     Camera camera{};

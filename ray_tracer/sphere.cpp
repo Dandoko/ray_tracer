@@ -2,10 +2,21 @@
 
 Sphere::Sphere(Point3 in_centre_start, double r, std::shared_ptr<Material> material) : centre_start(in_centre_start), radius(r), mat(material), is_moving(false) {
 	// centre_disp_vec has garbage value for stationary spheres
+
+	Vec3 radius_vec = Vec3(radius, radius, radius);
+	b_box = AABB(centre_start - radius_vec, centre_start + radius_vec);
 }
 
 Sphere::Sphere(Point3 in_centre_start, Point3 centre_end, double r, std::shared_ptr<Material> material) : centre_start(in_centre_start), radius(r), mat(material), is_moving(true) {
 	centre_disp_vec = centre_end - centre_start;
+
+	// Creates a bouding box around the sphere at time = 0 and time = 1
+	Vec3 radius_vec = Vec3(radius, radius, radius);
+	AABB start_box = AABB(centre_start - radius_vec, centre_start + radius_vec);
+	AABB end_box = AABB(centre_end - radius_vec, centre_end + radius_vec);
+
+	// Creates a bounding box that surrounds both of the bounding boxes above
+	b_box = AABB(start_box, end_box);
 }
 
 bool Sphere::hit(const Ray& r, Interval t_interval, HitRecord& rec) const {
@@ -41,6 +52,10 @@ bool Sphere::hit(const Ray& r, Interval t_interval, HitRecord& rec) const {
 	rec.mat = mat;
 	
 	return true;
+}
+
+AABB Sphere::bounding_box() const {
+	return b_box;
 }
 
 Point3 Sphere::calculate_current_centre(double time) const {

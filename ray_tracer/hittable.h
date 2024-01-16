@@ -1,6 +1,7 @@
 #ifndef HITTABLE_H
 #define HITTABLE_H
 
+#include "aabb.h"
 #include "interval.h"
 #include "ray.h"
 
@@ -22,6 +23,8 @@ class Hittable {
 public:
 	// Hits only count if t_min < t < t_max 
 	virtual bool hit(const Ray& r, Interval t_interval, HitRecord& rec) const = 0;
+
+	virtual AABB bounding_box() const = 0;
 };
 
 #endif
