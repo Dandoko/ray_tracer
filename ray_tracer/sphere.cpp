@@ -48,6 +48,7 @@ bool Sphere::hit(const Ray& r, Interval t_interval, HitRecord& rec) const {
 	rec.p = r.at(rec.t);
 	Vec3 outward_normal = (rec.p - centre) / radius;	// Does the same thing as unit_vector(rec.p - centre) but
 														// we need to divide by the radius for inverted spheres
+	get_sphere_uv(outward_normal, rec.u, rec.v);
 	rec.set_face_normal(r, outward_normal);
 	rec.mat = mat;
 	
@@ -61,4 +62,12 @@ AABB Sphere::bounding_box() const {
 Point3 Sphere::calculate_current_centre(double time) const {
 	// Linear interpolates for time [0, 1]
 	return centre_start + time * centre_disp_vec;
+}
+
+void Sphere::get_sphere_uv(const Point3& p, double u, double v) {
+	double theta = acos(-p.y());
+	double phi = atan2(-p.z(), p.x()) + PI;
+
+	u = phi / (2 * PI);
+	v = theta / PI;
 }

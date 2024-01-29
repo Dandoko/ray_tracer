@@ -21,6 +21,13 @@ private:
 	AABB b_box;
 
 	Point3 calculate_current_centre(double time) const; // Gets the position of the sphere at the specified ray time
+
+	/*
+	* p - Given point on a unit sphere centered at the origin
+	* u - Return value between [0, 1] representing the angle around the Y-axis starting from X = -1
+	* v - Return value between [0, 1] representing the angle from Y = -1 to Y = 1
+	*/
+	static void get_sphere_uv(const Point3& p, double u, double v);
 };
 
 #endif

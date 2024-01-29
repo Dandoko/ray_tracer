@@ -14,6 +14,8 @@ struct HitRecord {
 	double t;						// The position on the ray that intersected with the hittable object
 	bool is_front_face;				// Equals true when the ray is coming from outside of the object
 	std::shared_ptr<Material> mat;	// Points at the material the hittable object was given during setup in main()
+	double u;						// Texture u coordinate
+	double v;						// Texture v coordinate
 
 	// Precondition: outward_normal must have unit length
 	void set_face_normal(const Ray& r, const Vec3& outward_normal);
