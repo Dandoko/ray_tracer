@@ -9,6 +9,7 @@
 #include "interval.h"
 #include "lambertian.h"
 #include "metal.h"
+#include "noise_texture.h"
 #include "ray.h"
 #include "sphere.h"
 #include "checker_texture.h"
@@ -59,9 +60,22 @@ void two_spheres() {
     camera.render(world);
 }
 
+void two_perlin_spheres() {
+    HittableList world{};
+
+    auto perlin_texture = std::make_shared<NoiseTexture>(4);
+
+    world.add(std::make_shared<Sphere>(Point3(0.0, -1000.0, 0.0), 1000.0, std::make_shared<Lambertian>(perlin_texture)));
+    world.add(std::make_shared<Sphere>(Point3(0.0, 2, 0.0), 2.0, std::make_shared<Lambertian>(perlin_texture)));
+
+    Camera camera{ 16.0 / 9.0, 400, 50, 50, 20, Point3(13, 2, 3), Point3(0, 0, 0), Vec3(0, 1, 0), 0 , 10 };
+    camera.render(world);
+}
+
 int main() {
     //simple_world();
-    two_spheres();
+    //two_spheres();
+    two_perlin_spheres();
 
     return 0;
 }
