@@ -10,6 +10,7 @@
 #include "lambertian.h"
 #include "metal.h"
 #include "noise_texture.h"
+#include "quad.h"
 #include "ray.h"
 #include "sphere.h"
 #include "checker_texture.h"
@@ -72,10 +73,31 @@ void two_perlin_spheres() {
     camera.render(world);
 }
 
+void quads()
+{
+    HittableList world{};
+
+    auto left_red = std::make_shared<Lambertian>(Color(1.0, 0.2, 0.2));
+    auto back_green = std::make_shared<Lambertian>(Color(0.2, 1.0, 0.2));
+    auto right_blue = std::make_shared<Lambertian>(Color(0.2, 0.2, 1.0));
+    auto upper_orange = std::make_shared<Lambertian>(Color(1.0, 0.5, 0.0));
+    auto lower_teal = std::make_shared<Lambertian>(Color(0.2, 0.8, 0.8));
+
+    world.add(std::make_shared<Quad>(Point3(-3, -2, 5), Vec3(0, 0, -4), Vec3(0, 4, 0), left_red));
+    world.add(std::make_shared<Quad>(Point3(-2, -2, 0), Vec3(4, 0, 0), Vec3(0, 4, 0), back_green));
+    world.add(std::make_shared<Quad>(Point3(3, -2, 1), Vec3(0, 0, 4), Vec3(0, 4, 0), right_blue));
+    world.add(std::make_shared<Quad>(Point3(-2, 3, 1), Vec3(4, 0, 0), Vec3(0, 0, 4), upper_orange));
+    world.add(std::make_shared<Quad>(Point3(-2, -3, 5), Vec3(4, 0, 0), Vec3(0, 0, -4), lower_teal));
+
+    Camera camera{ 1.0, 400, 50, 50, 80, Point3(0, 0, 9), Point3(0, 0, 0), Vec3(0, 1, 0), 0, 10 };
+    camera.render(world);
+}
+
 int main() {
     //simple_world();
     //two_spheres();
-    two_perlin_spheres();
+    //two_perlin_spheres();
+    quads();
 
     return 0;
 }

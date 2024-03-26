@@ -18,6 +18,16 @@ AABB::AABB(const AABB& box0, const AABB& box1) {
     z = Interval(box0.z, box1.z);
 }
 
+AABB AABB::pad() const {
+    double padding = 0.0001;
+    
+    Interval padded_x = x.size() >= padding ? x : x.expand(padding);
+    Interval padded_y = y.size() >= padding ? y : y.expand(padding);
+    Interval padded_z = z.size() >= padding ? z : z.expand(padding);
+
+    return AABB(padded_x, padded_y, padded_z);
+}
+
 const Interval& AABB::axis(int i) const {
     if (0 == i) {
         return x;

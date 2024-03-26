@@ -14,6 +14,8 @@ public:
 	AABB(const Point3& a, const Point3& b); // a and b are bounding box points
 	AABB(const AABB& box0, const AABB& box1);
 
+	AABB pad() const;
+
 	const Interval& axis(int i) const;
 
 	bool hit(const Ray& r, Interval t) const;
