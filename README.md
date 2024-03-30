@@ -9,7 +9,7 @@ This is a ray tracer I learned based off of Peter Shirley's Ray Tracer series. T
 - Moving objects and motion blur
 - Bounding Volume Hierarchy
 - UV texture mapping
-- Perlin Noise textures
+- Perlin noise textures
 
 ## Render
 ![alt text](https://github.com/Dandoko/ray_tracer/blob/master/images/render.png?raw=true)
